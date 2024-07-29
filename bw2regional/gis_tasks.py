@@ -126,6 +126,14 @@ def calculate_intersection(first, second, engine=remote, overwrite=False, cpus=N
 
         assert id1 != id2, "Conflicting ID labels"
 
+        # NOTE: otherwise the ids are transformed automatically to avoid
+        # duplicate labels in the columns.
+        if id2 in df1.columns:
+            df1 = df1.rename({id2:f'{id2}_1'},axis='columns')
+ 
+        if id1 in df2.columns:
+            df2 = df2.rename({id1:f'{id1}_1'},axis='columns')
+
         intersection = gp.overlay(df1, df2, keep_geom_type=False)
         areas = intersection.to_crs(
             "esri:54009"
